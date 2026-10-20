@@ -20,7 +20,7 @@ async def login(payload: LoginRequest):
     email, password = payload.email, payload.password
     user = USERS.get(email)
     if not user or user["password"] != password:
-        return JSONResponse({"message": "invalid credentials"}, status_code=200)
+        return JSONResponse({"detail": "Invalid credentials"}, status_code=401)
     token = f"fake-token-for-{email}"
     return {"accessToken": token, "userId": user["id"]}
 
