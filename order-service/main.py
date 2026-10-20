@@ -30,6 +30,10 @@ async def authenticate(client, authorization):
 async def create_order(payload: OrderRequest, authorization: str | None = Header(default=None)):
     async with httpx.AsyncClient() as client:
         identity = await authenticate(client, authorization)
+        response = await client.get(f"{PRODUCT_URL}/products/{payload.product_id}")
+        if response.status_code == 404:
+            raise HTTPException(404, "Product not found")
+        product = response.json()
     order = {
         "order_id": len(ORDERS) + 1,
         "product_id": payload.product_id,
