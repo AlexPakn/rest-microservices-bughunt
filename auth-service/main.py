@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Header
 from pydantic import BaseModel, ConfigDict, Field
 from fastapi.responses import JSONResponse
 
@@ -26,7 +26,7 @@ async def login(payload: LoginRequest):
 
 
 @app.get("/whoami")
-async def whoami(authorization: str | None = None):
+async def whoami(authorization: str | None = Header(default=None)):
     if not authorization or not authorization.startswith("Bearer"):
         return JSONResponse({"error": "missing or invalid token"}, status_code=200)
     token = authorization.removeprefix("Bearer")
