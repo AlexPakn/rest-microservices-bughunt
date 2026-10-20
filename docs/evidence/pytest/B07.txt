@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_b07_product_price_is_json_number ____________________
+tests\test_products.py:7: in test_b07_product_price_is_json_number
+    assert type(product["price"]) in (float, int)
+E   AssertionError: assert <class 'str'> in (<class 'float'>, <class 'int'>)
+E    +  where <class 'str'> = type('59.99')
+=========================== short test summary info ===========================
+FAILED tests/test_products.py::test_b07_product_price_is_json_number - Assert...
+1 failed in 0.16s

@@ -1,0 +1,13 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_b13_order_list_requires_authentication _________________
+tests\test_orders.py:96: in test_b13_order_list_requires_authentication
+    assert clients.order.get("/orders").status_code == 401
+E   AssertionError: assert 200 == 401
+E    +  where 200 = <Response [200 OK]>.status_code
+E    +    where <Response [200 OK]> = <bound method TestClient.get of <starlette.testclient.TestClient object at 0x0000024E653A6A80>>('/orders')
+E    +      where <bound method TestClient.get of <starlette.testclient.TestClient object at 0x0000024E653A6A80>> = <starlette.testclient.TestClient object at 0x0000024E653A6A80>.get
+E    +        where <starlette.testclient.TestClient object at 0x0000024E653A6A80> = namespace(auth=<starlette.testclient.TestClient object at 0x0000024E638AA870>, product=<starlette.testclient.TestClient object at 0x0000024E653A65D0>, order=<starlette.testclient.TestClient object at 0x0000024E653A6A80>).order
+=========================== short test summary info ===========================
+FAILED tests/test_orders.py::test_b13_order_list_requires_authentication - As...
+1 failed in 0.18s

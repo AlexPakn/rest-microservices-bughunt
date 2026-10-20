@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_____________________ test_b04_missing_token_returns_401 ______________________
+tests\test_auth.py:41: in test_b04_missing_token_returns_401
+    assert response.status_code == 401
+E   assert 200 == 401
+E    +  where 200 = <Response [200 OK]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/test_auth.py::test_b04_missing_token_returns_401 - assert 200 ==...
+1 failed in 0.22s

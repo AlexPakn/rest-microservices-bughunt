@@ -32,6 +32,20 @@
 секретів. B06/B07 впливають насамперед на надійність контрактів. Пріоритети якісні,
 оцінювання CVSS для цього навчального макета не виконувалось.
 
+## Скриншоти результатів pytest
+
+Нижче наведено знімки HTML-звіту з дослівним виводом реальних запусків pytest.
+Для кожного дефекту окремий скриншот розміщено біля його опису.
+[Текстові протоколи, команди та пояснення відтворення](evidence/pytest/README.md).
+
+Початковий код: **53 failed, 3 passed**.
+
+![Загальний результат pytest до виправлень](screenshots/pytest-baseline.png)
+
+Виправлений код: **56 passed**.
+
+![Загальний результат pytest після виправлень](screenshots/pytest-fixed.png)
+
 ## Приклади відтворення та виправлення
 
 Приклади нижче описують початковий код і результат після виправлення.
@@ -47,11 +61,15 @@
 Тести: `test_b01_login_accepts_json_post`, `test_b01_login_does_not_accept_password_in_url`.
 Перевірка B01 не надсилає пароль у мережевий URL: запит виконується лише в пам'яті TestClient.
 
+![pytest: B01 на початковому коді](screenshots/pytest-B01.png)
+
 ### B02. Неправильні облікові дані
 
 До: login із `password: "wrong"` → `200 {"message":"invalid credentials"}`.
 Після: POST login → `401 {"detail":"Invalid credentials"}`.
 Тест: `test_b02_bad_credentials_are_unauthorized`.
+
+![pytest: B02 на початковому коді](screenshots/pytest-B02.png)
 
 ### B03. Джерело заголовка Authorization
 
@@ -62,11 +80,15 @@ query-параметр без заголовка → `401`. Тест загол�
 Тести: `test_b03_whoami_reads_authorization_header`,
 `test_b03_query_cannot_replace_authorization_header`.
 
+![pytest: B03 на початковому коді](screenshots/pytest-B03.png)
+
 ### B04. Статус відмови whoami
 
 До: `GET /whoami` без токена → `200 {"error":"missing or invalid token"}`.
 Після: `401 {"detail":"Missing or invalid token"}`, заголовок `WWW-Authenticate: Bearer`.
 Тести: `test_b04_missing_token_returns_401`, `test_b04_unauthorized_response_has_bearer_challenge`.
+
+![pytest: B04 на початковому коді](screenshots/pytest-B04.png)
 
 ### B05. Перевірка справжності токена
 
@@ -79,11 +101,15 @@ query-параметр без заголовка → `401`. Тест загол�
 Тести: `test_b05_unissued_or_malformed_token_rejected` (6 випадків),
 `test_b05_expired_token_rejected` із керованим годинником.
 
+![pytest: B05 на початковому коді](screenshots/pytest-B05.png)
+
 ### B06. Відсутній товар
 
 До: `GET /products/9999` → `200 {"message":"not found"}`.
 Після: `404 {"detail":"Product not found"}`.
 Тест: `test_b06_unknown_product_returns_404`.
+
+![pytest: B06 на початковому коді](screenshots/pytest-B06.png)
 
 ### B07. Контракт товару
 
@@ -95,12 +121,16 @@ query-параметр без заголовка → `401`. Тест загол�
 Обране числове подання та назва `stock` явно задокументовані.
 Тести: три `test_b07_*` у `test_products.py`.
 
+![pytest: B07 на початковому коді](screenshots/pytest-B07.png)
+
 ### B08. Ігнорування відмови Auth
 
 До: `POST /orders` із `{"productId":100,"qty":1}` без Authorization → `201`,
 хоча Auth не підтвердив користувача. Відповідь Auth відкидається.
 Після: `401`, замовлення не записується. Якщо Auth відповів `403`, Order повертає `403`.
 Тести: `test_b08_order_requires_authorization`, `test_b08_order_honors_auth_rejection`.
+
+![pytest: B08 на початковому коді](screenshots/pytest-B08.png)
 
 ### B09. Невалідне замовлення
 
@@ -109,12 +139,16 @@ query-параметр без заголовка → `401`. Тест загол�
 Схема забороняє пропущені й зайві поля, bool, null, рядки, дробові та недодатні значення.
 Тест: `test_b09_invalid_order_payload_rejected` (12 випадків).
 
+![pytest: B09 на початковому коді](screenshots/pytest-B09.png)
+
 ### B10. Неіснуючий товар у замовленні
 
 До: `POST /orders` із `{"productId":9999,"qty":1}` → `201`.
 Після з дійсним токеном: `404 {"detail":"Product not found"}`, запис відсутній.
 Order звертається до `GET /products/{id}` перед створенням.
 Тест: `test_b10_unknown_product_cannot_be_ordered`.
+
+![pytest: B10 на початковому коді](screenshots/pytest-B10.png)
 
 ### B11. Недостатній залишок
 
@@ -123,6 +157,8 @@ Order звертається до `GET /products/{id}` перед створен
 Перевірено нульовий залишок, перевищення та допустиму кількість рівно на межі.
 Тести: `test_b11_insufficient_stock_rejected`, `test_b11_exact_stock_quantity_is_allowed`.
 Це перевірка поточного stock; атомарне резервування не реалізоване.
+
+![pytest: B11 на початковому коді](screenshots/pytest-B11.png)
 
 ### B12. Збої та неправильні відповіді сусідніх сервісів
 
@@ -139,6 +175,8 @@ Product узагалі не викликається. Після виправл�
 перевіряються статус, JSON та Pydantic-схема; внутрішні дані помилки клієнтові не розкриваються.
 Тести: 12 випадків `test_b12_*` із HTTPX MockTransport.
 
+![pytest: B12 на початковому коді](screenshots/pytest-B12.png)
+
 ### B13. Доступ до чужих замовлень
 
 До: `GET /orders` без токена → `200 {"orders":[усі замовлення]}`.
@@ -147,6 +185,8 @@ Product узагалі не викликається. Після виправл�
 нове замовлення отримує user_id із підтвердженої особи Auth.
 Тести: `test_b13_order_list_requires_authentication`,
 `test_b13_users_only_see_their_own_orders`, `test_b13_created_order_belongs_to_authenticated_user`.
+
+![pytest: B13 на початковому коді](screenshots/pytest-B13.png)
 
 ## Підтвердження результату
 

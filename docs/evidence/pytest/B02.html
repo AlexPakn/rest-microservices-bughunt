@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="uk"><meta charset="utf-8"><title>pytest — B02</title>
+<style>
+* {box-sizing:border-box} body {margin:0;padding:28px;background:#edf1f5;color:#172333;
+font-family:Arial,sans-serif} article {background:#fff;border:1px solid #d5dce5;border-radius:12px;
+overflow:hidden} header {padding:22px 26px;border-bottom:1px solid #dce2ea}
+h1 {margin:0 0 10px;font-size:25px} p {margin:6px 0;font-size:15px;color:#455366}
+.status {color:#c43131;font-weight:bold} .command {padding:18px 26px;background:#f2f5f8;
+font:14px Consolas,monospace;overflow-wrap:anywhere}
+pre {margin:0;padding:22px 26px;white-space:pre-wrap;overflow-wrap:anywhere;
+font:15px/1.55 Consolas,"Courier New",monospace;color:#172333}
+footer {padding:15px 26px;border-top:1px solid #dce2ea;font-size:13px;color:#536278}
+</style><article><header><h1>B02 · Invalid credentials</h1>
+<p>Код сервісів: <strong>baseline (363f865)</strong></p>
+<p class="status">pytest exit code: 1</p></header>
+<div class="command">python -m pytest tests/test_auth.py::test_b02_bad_credentials_are_unauthorized --tb=short -q --color=no -p no:warnings</div>
+<pre>F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_b02_bad_credentials_are_unauthorized __________________
+tests\test_auth.py:26: in test_b02_bad_credentials_are_unauthorized
+    assert response.status_code == 401
+E   assert 200 == 401
+E    +  where 200 = &lt;Response [200 OK]&gt;.status_code
+=========================== short test summary info ===========================
+FAILED tests/test_auth.py::test_b02_bad_credentials_are_unauthorized - assert...
+1 failed in 0.16s
+</pre>
+<footer>Знімок HTML-звіту з дослівним stdout/stderr реального запуску pytest.
+Початкові сервіси завантажуються через BUGHUNT_SOURCE_ROOT; тести в обох версіях однакові.</footer>
+</article></html>

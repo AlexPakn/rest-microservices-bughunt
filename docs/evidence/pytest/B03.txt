@@ -1,0 +1,11 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________________ test_b03_whoami_reads_authorization_header __________________
+tests\test_auth.py:31: in test_b03_whoami_reads_authorization_header
+    assert "email" in response.json()
+E   AssertionError: assert 'email' in {'error': 'missing or invalid token'}
+E    +  where {'error': 'missing or invalid token'} = <bound method Response.json of <Response [200 OK]>>()
+E    +    where <bound method Response.json of <Response [200 OK]>> = <Response [200 OK]>.json
+=========================== short test summary info ===========================
+FAILED tests/test_auth.py::test_b03_whoami_reads_authorization_header - Asser...
+1 failed in 0.17s

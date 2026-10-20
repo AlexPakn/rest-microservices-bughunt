@@ -1,0 +1,152 @@
+[
+  {
+    "id": "B01",
+    "title": "POST login",
+    "command": "python -m pytest tests/test_auth.py::test_b01_login_accepts_json_post --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B01.txt",
+    "page": "B01.html",
+    "screenshot": "../../screenshots/pytest-B01.png"
+  },
+  {
+    "id": "B02",
+    "title": "Invalid credentials",
+    "command": "python -m pytest tests/test_auth.py::test_b02_bad_credentials_are_unauthorized --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B02.txt",
+    "page": "B02.html",
+    "screenshot": "../../screenshots/pytest-B02.png"
+  },
+  {
+    "id": "B03",
+    "title": "Authorization header",
+    "command": "python -m pytest tests/test_auth.py::test_b03_whoami_reads_authorization_header --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B03.txt",
+    "page": "B03.html",
+    "screenshot": "../../screenshots/pytest-B03.png"
+  },
+  {
+    "id": "B04",
+    "title": "Missing token",
+    "command": "python -m pytest tests/test_auth.py::test_b04_missing_token_returns_401 --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B04.txt",
+    "page": "B04.html",
+    "screenshot": "../../screenshots/pytest-B04.png"
+  },
+  {
+    "id": "B05",
+    "title": "Forged token",
+    "command": "python -m pytest \"tests/test_auth.py::test_b05_unissued_or_malformed_token_rejected[Bearer fake-token-for-alice@example.com]\" --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B05.txt",
+    "page": "B05.html",
+    "screenshot": "../../screenshots/pytest-B05.png"
+  },
+  {
+    "id": "B06",
+    "title": "Unknown product",
+    "command": "python -m pytest tests/test_products.py::test_b06_unknown_product_returns_404 --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B06.txt",
+    "page": "B06.html",
+    "screenshot": "../../screenshots/pytest-B06.png"
+  },
+  {
+    "id": "B07",
+    "title": "Product schema",
+    "command": "python -m pytest tests/test_products.py::test_b07_product_price_is_json_number --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B07.txt",
+    "page": "B07.html",
+    "screenshot": "../../screenshots/pytest-B07.png"
+  },
+  {
+    "id": "B08",
+    "title": "Order authentication",
+    "command": "python -m pytest tests/test_orders.py::test_b08_order_requires_authorization --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B08.txt",
+    "page": "B08.html",
+    "screenshot": "../../screenshots/pytest-B08.png"
+  },
+  {
+    "id": "B09",
+    "title": "Order validation",
+    "command": "python -m pytest tests/test_orders.py::test_b09_invalid_order_payload_rejected[payload0] --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B09.txt",
+    "page": "B09.html",
+    "screenshot": "../../screenshots/pytest-B09.png"
+  },
+  {
+    "id": "B10",
+    "title": "Product existence",
+    "command": "python -m pytest tests/test_orders.py::test_b10_unknown_product_cannot_be_ordered --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B10.txt",
+    "page": "B10.html",
+    "screenshot": "../../screenshots/pytest-B10.png"
+  },
+  {
+    "id": "B11",
+    "title": "Stock check",
+    "command": "python -m pytest tests/test_orders.py::test_b11_insufficient_stock_rejected[0-1] --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B11.txt",
+    "page": "B11.html",
+    "screenshot": "../../screenshots/pytest-B11.png"
+  },
+  {
+    "id": "B12",
+    "title": "Dependency failure",
+    "command": "python -m pytest tests/test_orders.py::test_b12_dependency_transport_failure_is_explicit[ConnectError-502-auth] --tb=line -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B12.txt",
+    "page": "B12.html",
+    "screenshot": "../../screenshots/pytest-B12.png"
+  },
+  {
+    "id": "B13",
+    "title": "Order privacy",
+    "command": "python -m pytest tests/test_orders.py::test_b13_order_list_requires_authentication --tb=short -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "B13.txt",
+    "page": "B13.html",
+    "screenshot": "../../screenshots/pytest-B13.png"
+  },
+  {
+    "id": "baseline",
+    "title": "Before fixes: full suite",
+    "command": "python -m pytest --tb=no --no-summary -q --color=no -p no:warnings",
+    "service_revision": "baseline (363f865)",
+    "exit_code": 1,
+    "output": "baseline.txt",
+    "page": "baseline.html",
+    "screenshot": "../../screenshots/pytest-baseline.png"
+  },
+  {
+    "id": "fixed",
+    "title": "After fixes: full suite",
+    "command": "python -m pytest --tb=short -q --color=no -p no:warnings",
+    "service_revision": "solution (B01–B13)",
+    "exit_code": 0,
+    "output": "fixed.txt",
+    "page": "fixed.html",
+    "screenshot": "../../screenshots/pytest-fixed.png"
+  }
+]

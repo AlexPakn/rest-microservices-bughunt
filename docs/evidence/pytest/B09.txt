@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+______________ test_b09_invalid_order_payload_rejected[payload0] ______________
+tests\test_orders.py:37: in test_b09_invalid_order_payload_rejected
+    assert response.status_code == 422
+E   assert 201 == 422
+E    +  where 201 = <Response [201 Created]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/test_orders.py::test_b09_invalid_order_payload_rejected[payload0]
+1 failed in 0.19s

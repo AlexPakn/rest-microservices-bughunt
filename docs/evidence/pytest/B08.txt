@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____________________ test_b08_order_requires_authorization ____________________
+tests\test_orders.py:15: in test_b08_order_requires_authorization
+    assert response.status_code == 401
+E   assert 201 == 401
+E    +  where 201 = <Response [201 Created]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/test_orders.py::test_b08_order_requires_authorization - assert 2...
+1 failed in 0.16s

@@ -1,0 +1,10 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+__________________ test_b11_insufficient_stock_rejected[0-1] __________________
+tests\test_orders.py:53: in test_b11_insufficient_stock_rejected
+    assert response.status_code == 409
+E   assert 201 == 409
+E    +  where 201 = <Response [201 Created]>.status_code
+=========================== short test summary info ===========================
+FAILED tests/test_orders.py::test_b11_insufficient_stock_rejected[0-1] - asse...
+1 failed in 0.17s
