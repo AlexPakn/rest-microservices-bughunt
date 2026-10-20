@@ -2,7 +2,6 @@ import os
 
 import httpx
 from fastapi import FastAPI, Header, HTTPException
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
 app = FastAPI(title="OrderService")
@@ -32,6 +31,18 @@ class ProductSnapshot(BaseModel):
     stock: int = Field(ge=0)
 
 
+class OrderResult(BaseModel):
+    order_id: int
+    user_id: int
+    product_id: int
+    quantity: int
+    status: str
+
+
+class OrderList(BaseModel):
+    orders: list[OrderResult]
+
+
 async def upstream(client, url, model, service, *, headers=None, allowed_errors=()):
     try:
         response = await client.get(url, headers=headers)
@@ -58,7 +69,7 @@ async def authenticate(client, authorization):
                           headers={"Authorization": authorization}, allowed_errors=(401, 403))
 
 
-@app.post("/orders")
+@app.post("/orders", response_model=OrderResult, status_code=201)
 async def create_order(payload: OrderRequest, authorization: str | None = Header(default=None)):
     async with httpx.AsyncClient(timeout=UPSTREAM_TIMEOUT_SECONDS, follow_redirects=False) as client:
         identity = await authenticate(client, authorization)
@@ -70,14 +81,17 @@ async def create_order(payload: OrderRequest, authorization: str | None = Header
             raise HTTPException(409, "Insufficient stock")
     order = {
         "order_id": len(ORDERS) + 1,
+        "user_id": identity.user_id,
         "product_id": payload.product_id,
         "quantity": payload.quantity,
         "status": "created",
     }
     ORDERS.append(order)
-    return JSONResponse(order, status_code=201)
+    return order
 
 
-@app.get("/orders")
-async def list_orders():
-    return {"orders": ORDERS}
+@app.get("/orders", response_model=OrderList)
+async def list_orders(authorization: str | None = Header(default=None)):
+    async with httpx.AsyncClient(timeout=UPSTREAM_TIMEOUT_SECONDS, follow_redirects=False) as client:
+        identity = await authenticate(client, authorization)
+    return {"orders": [order for order in ORDERS if order["user_id"] == identity.user_id]}
