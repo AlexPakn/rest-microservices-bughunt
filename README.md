@@ -6,6 +6,7 @@
 ## Що відкрити
 
 - [Оцінка завдання та подальші дії](docs/READINESS.md) — російською для власника проєкту.
+- [Посилання для здавання: репозиторій, 13 PR, перевірка GitHub Actions](docs/GITHUB_SUBMISSION.md).
 - [Звіт про дефекти](docs/BUG_REPORT.md) — українською для здавання, зі скриншотами pytest для всіх 13 дефектів.
 - [Результати тестів](docs/TEST_RESULTS.md): початковий код **53 failed / 3 passed**, виправлений **56 passed**.
 - [REST-контракт](docs/API_CONTRACT.md).
@@ -15,7 +16,9 @@
 Поточна гілка `solution` містить усі виправлення та документацію.
 Гілка `main` і тег `baseline` зберігають придатний до запуску початковий код з навмисними помилками.
 Гілки `fix/b01-*` … `fix/b13-*` послідовні: кожна додає одне виправлення до попередньої.
-У GitHub нічого ще не опубліковано; віддалений репозиторій і PR не створено.
+Проєкт опубліковано в [AlexPakn/rest-microservices-bughunt](https://github.com/AlexPakn/rest-microservices-bughunt).
+Створено [13 окремих PR](https://github.com/AlexPakn/rest-microservices-bughunt/pulls).
+Основна гілка для перегляду готового рішення — `solution`.
 
 ## Перевірка без Docker
 

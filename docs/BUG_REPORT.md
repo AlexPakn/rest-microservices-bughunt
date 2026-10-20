@@ -195,6 +195,8 @@ Product узагалі не викликається. Після виправл�
 Реальні HTTP-запити до трьох локальних Uvicorn-процесів також успішні
 (`python scripts/smoke_http.py --start`). Контейнерний запуск ще не перевірено.
 
-Гілки, бази порівняння, хеші коммітів і тексти PR наведено в `PULL_REQUESTS.md`.
-PR існують як підготовлені локальні матеріали, а не як опубліковані GitHub-посилання.
-Після публікації до цього звіту слід додати фактичні адреси репозиторію та 13 PR.
+Гілки, бази порівняння, хеші коммітів і тексти PR наведено в [PULL_REQUESTS.md](PULL_REQUESTS.md).
+Репозиторій: [AlexPakn/rest-microservices-bughunt](https://github.com/AlexPakn/rest-microservices-bughunt).
+Усі 13 окремих PR опубліковано: [таблиця фактичних посилань](GITHUB_SUBMISSION.md).
+Додатково пройдено [GitHub Actions на Ubuntu / Python 3.11](https://github.com/AlexPakn/rest-microservices-bughunt/actions/runs/39423880736):
+повний набір pytest і HTTP-перевірку трьох сервісів.
