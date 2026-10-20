@@ -34,6 +34,8 @@ async def create_order(payload: OrderRequest, authorization: str | None = Header
         if response.status_code == 404:
             raise HTTPException(404, "Product not found")
         product = response.json()
+        if payload.quantity > product["stock"]:
+            raise HTTPException(409, "Insufficient stock")
     order = {
         "order_id": len(ORDERS) + 1,
         "product_id": payload.product_id,
