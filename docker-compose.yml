@@ -1,0 +1,19 @@
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "8001:8000"
+  product-service:
+    build: ./product-service
+    ports:
+      - "8002:8000"
+  order-service:
+    build: ./order-service
+    ports:
+      - "8003:8000"
+    environment:
+      AUTH_URL: http://auth-service:8000
+      PRODUCT_URL: http://product-service:8000
+    depends_on:
+      - auth-service
+      - product-service

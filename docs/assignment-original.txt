@@ -1,0 +1,210 @@
+Індивідуальне завдання. Мікросервісна система REST
+Мета роботи: Ознайомитися з взаємодією між мікросервісами, розумінням REST- контрактів та типових помилок інтеграції.
+Завдання
+Створіть репозиторій на github із початковим кодом
+
+
+Знайдіть помилки.
+
+
+Створіть модульні тести (pytest), які покажуть наявність помилок. Один тест має перевіряти одну помилку
+
+
+Проаналізуйте важливість знайдених помилок.
+
+
+Виправте помилки. Кожне виправлення оформіть в окрему гілку git та створіть для кожної гілки відповідний pull request
+
+
+За допомогою тестів покажіть, що помилки виправлено.
+Підказки
+Це навчальний макет з навмисними багами для вправи з пошуку та виправлення помилок у мікросервісній архітектурі на основі REST.
+Сервіси: auth-service, product-service, order-service.
+Технології: FastAPI, Uvicorn, Docker, Docker Compose
+Не логуйте паролі/токени; не передавайте їх у URL.
+Використовуйте правильні статус-коди та явні помилки — ключ до надійної інтеграції.
+Узгоджена схема даних — менше крихких інтеграцій.
+Мінімум — використати Pydantic-схеми, максимум — узгоджений контракт і контрактні тести.
+Розгортання
+1. Встановіть Docker і Docker Compose.
+2. У корені проєкту виконайте:
+docker compose up --build
+3. Ендпоїнти:
+AuthService: http://localhost:8001
+
+
+ProductService: http://localhost:8002
+
+
+OrderService: http://localhost:8003
+Структура репозиторію
+rest-microservices-bughunt/
+├─ docker-compose.yml
+├─ README.md
+├─ auth-service/
+│ ├─ Dockerfile
+│ ├─ requirements.txt
+│ └─ main.py
+├─ product-service/
+│ ├─ Dockerfile
+│ ├─ requirements.txt
+│ └─ main.py
+└─ order-service/
+├─ Dockerfile
+├─ requirements.txt
+└─ main.py
+docker-compose.yml
+version: “3.9”
+services:
+auth-service:
+build: ./auth-service
+container_name: auth-service
+ports:
+- “8001:8000”
+product-service:
+build: ./product-service
+container_name: product-service
+ports:
+- “8002:8000”
+order-service:
+build: ./order-service
+container_name: order-service
+ports:
+- “8003:8000”
+environment:
+# URL-и інших сервісів
+AUTH_URL: http://auth-service:8000
+PRODUCT_URL: http://product-service:8000
+depends_on:
+- auth-service
+- product-service
+Загальні вимоги для сервісів
+requirements.txt (однаковий для всіх сервісів):
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+httpx==0.27.0
+pydantic==2.7.1
+Підказка: у кожній папці сервісу створіть requirements.txt з цим вмістом.
+auth-service/Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY main.py ./
+EXPOSE 8000
+CMD [“uvicorn”, “main:app”, “–host”, “0.0.0.0”, “–port”, “8000”]
+auth-service/main.py (містить навмисні баги)
+from fastapi import FastAPI, Response
+from fastapi.responses import JSONResponse
+app = FastAPI(title=“AuthService”)
+# Простеньке “сховище” користувачів у пам’яті (для навчальних цілей)
+USERS = {
+“alice@example.com”: {“password”: “alice123”, “id”: 1},
+“bob@example.com”: {“password”: “bob123”, “id”: 2},
+}
+@app.get(“/login”)
+async def login(email: str, password: str, response: Response):
+user = USERS.get(email)
+if not user or user[“password”] != password:
+return JSONResponse({“message”: “invalid credentials”}, status_code=200)
+\# TOKЕН спрощений (НЕ використовуйте так у проді\!)  
+token \= f"fake-token-for-{email}"
+
+return {"accessToken": token, "userId": user\["id"\]}
+@app.get(“/whoami”)
+async def whoami(authorization: str | None = None):
+"""
+Стверджується, що токен подається як Bearer у заголовку Authorization.
+"""
+if not authorization or not authorization.startswith(“Bearer”):
+return JSONResponse({“error”: “missing or invalid token”}, status_code=200)
+token = authorization.removeprefix(“Bearer”)
+# Немає перевірки підпису/строку дії — навчальний спрощений варіант
+email = token.replace(“fake-token-for-”, "“)
+return {”email": email}
+product-service/Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY main.py ./
+EXPOSE 8000
+CMD [“uvicorn”, “main:app”, “–host”, “0.0.0.0”, “–port”, “8000”]
+product-service/main.py (містить навмисні баги)
+from fastapi import FastAPI
+from fastapi.responses import JSONResponse
+app = FastAPI(title=“ProductService”)
+# Нехай у нас є простий каталог товарів
+PRODUCTS = [
+{“product_id”: 100, “name”: “Keyboard”, “price”: “59.99”, “inStock”: 5},
+{“product_id”: 101, “name”: “Mouse”, “price”: “29.99”, “inStock”: 0},
+]
+@app.get(“/products”)
+async def list_products():
+return {“items”: PRODUCTS}
+@app.get(“/products/{pid}”)
+async def get_product(pid: int):
+for p in PRODUCTS:
+if p[“product_id”] == pid:
+return p
+return JSONResponse({“message”: “not found”}, status_code=200)
+order-service/Dockerfile
+FROM python:3.11-slim
+WORKDIR /app
+COPY requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
+COPY main.py ./
+EXPOSE 8000
+CMD [“uvicorn”, “main:app”, “–host”, “0.0.0.0”, “–port”, “8000”]
+order-service/main.py (містить навмисні баги)
+import os
+from fastapi import FastAPI, Header
+from fastapi.responses import JSONResponse
+import httpx
+app = FastAPI(title=“OrderService”)
+AUTH_URL = os.getenv(“AUTH_URL”, “http://localhost:8001”)
+PRODUCT_URL = os.getenv(“PRODUCT_URL”, “http://localhost:8002”)
+ORDERS: list[dict] = []
+@app.post(“/orders”)
+async def create_order(payload: dict, authorization: str | None = Header(default=None)):
+"""
+Очікуваний payload: {“productId”: int, “qty”: int}
+"""
+# (Намагаємось) перевірити токен
+async with httpx.AsyncClient() as client:
+_ = await client.get(f“{AUTH_URL}/whoami”, headers={“Authorization”: authorization or ""})
+order \= {  
+    "order\_id": len(ORDERS) \+ 1,  
+    "product\_id": payload.get("productId"),  
+    "quantity": payload.get("qty"),  
+    "status": "created",  
+}  
+ORDERS.append(order)  
+return JSONResponse(order, status\_code=201)
+@app.get(“/orders”)
+async def list_orders():
+return {“orders”: ORDERS}
+
+Швидкий мануал для перевірки
+# 1) ЛОГІН (BUG: пароль у URL через GET)
+curl “http://localhost:8001/login?email=alice@example.com&password=alice123” -i
+# 2) ХТО Я (BUG: 200 замість 401 при відсутньому токені)
+curl http://localhost:8001/whoami -i
+# 3) СПИСОК ТОВАРІВ (BUG: price як рядок, inStock vs product_id)
+curl http://localhost:8002/products -i
+# 4) ТОВАР НЕ ІСНУЄ (BUG: 200 замість 404)
+curl http://localhost:8002/products/9999 -i
+# 5) СТВОРЕННЯ ЗАМОВЛЕННЯ без перевірок (BUG: ігнор статусів та стоку)
+TOKEN=“Bearer fake-token-for-alice@example.com”
+curl -X POST http://localhost:8003/orders \
+-H “Content-Type: application/json” \
+-H “Authorization: $TOKEN” \
+-d ‘{“productId”:101, “qty”: 3}’ -i
+Критерії оцінювання
+Звіт про баги із прикладами запитів/відповідей.
+
+
+Патчі/PR-и з виправленнями та короткими поясненнями.
+
+
+Автотести (за бажанням): покриття критичних сценаріїв.
