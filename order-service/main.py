@@ -3,11 +3,18 @@ import os
 import httpx
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel, ConfigDict, Field
 
 app = FastAPI(title="OrderService")
 AUTH_URL = os.getenv("AUTH_URL", "http://localhost:8001")
 PRODUCT_URL = os.getenv("PRODUCT_URL", "http://localhost:8002")
 ORDERS: list[dict] = []
+
+
+class OrderRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid", strict=True)
+    product_id: int = Field(alias="productId", gt=0)
+    quantity: int = Field(alias="qty", gt=0)
 
 
 async def authenticate(client, authorization):
@@ -20,13 +27,13 @@ async def authenticate(client, authorization):
 
 
 @app.post("/orders")
-async def create_order(payload: dict, authorization: str | None = Header(default=None)):
+async def create_order(payload: OrderRequest, authorization: str | None = Header(default=None)):
     async with httpx.AsyncClient() as client:
         identity = await authenticate(client, authorization)
     order = {
         "order_id": len(ORDERS) + 1,
-        "product_id": payload.get("productId"),
-        "quantity": payload.get("qty"),
+        "product_id": payload.product_id,
+        "quantity": payload.quantity,
         "status": "created",
     }
     ORDERS.append(order)
