@@ -1,5 +1,4 @@
 import importlib.util
-import os
 import sys
 from contextlib import ExitStack
 from pathlib import Path
@@ -9,7 +8,7 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-ROOT = Path(os.environ.get("BUGHUNT_SOURCE_ROOT", Path(__file__).resolve().parents[1]))
+ROOT = Path(__file__).resolve().parents[1]
 
 
 @pytest.fixture
@@ -39,14 +38,9 @@ def clients(services):
 
 
 def issue_token(client, email="alice@example.com", password="alice123"):
-    # Supports both revisions so each regression test targets its own defect.
-    if any(route.path == "/login" and "POST" in getattr(route, "methods", set())
-           for route in client.app.routes):
-        response = client.post("/login", json={"email": email, "password": password})
-    else:
-        response = client.get("/login", params={"email": email, "password": password})
-    body = response.json()
-    return body.get("access_token", body.get("accessToken"))
+    response = client.post("/login", json={"email": email, "password": password})
+    assert response.status_code == 200
+    return response.json()["access_token"]
 
 
 @pytest.fixture

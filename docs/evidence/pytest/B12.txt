@@ -1,6 +1,0 @@
-F                                                                        [100%]
-================================== FAILURES ===================================
-C:\Users\Алексей\OneDrive\Рабочий стол\labs\rest-microservices-bughunt\tests\conftest.py:75: httpx.ConnectError: simulated upstream failure
-=========================== short test summary info ===========================
-FAILED tests/test_orders.py::test_b12_dependency_transport_failure_is_explicit[ConnectError-502-auth]
-1 failed in 0.05s

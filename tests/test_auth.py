@@ -18,11 +18,8 @@ def test_b01_login_does_not_accept_password_in_url(clients):
 
 
 def test_b02_bad_credentials_are_unauthorized(clients):
-    is_post = any(route.path == "/login" and "POST" in getattr(route, "methods", set())
-                  for route in clients.auth.app.routes)
     credentials = {"email": "alice@example.com", "password": "wrong"}
-    response = (clients.auth.post("/login", json=credentials) if is_post
-                else clients.auth.get("/login", params=credentials))
+    response = clients.auth.post("/login", json=credentials)
     assert response.status_code == 401
 
 
@@ -51,9 +48,7 @@ def test_b04_unauthorized_response_has_bearer_challenge(clients):
     "Bearernonsense", "Bearer", "Basic abc", "Bearer a b",
 ])
 def test_b05_unissued_or_malformed_token_rejected(clients, authorization):
-    # Supply both to reach the original buggy token parser independently of B03.
-    response = clients.auth.get("/whoami", headers={"Authorization": authorization},
-                                params={"authorization": authorization})
+    response = clients.auth.get("/whoami", headers={"Authorization": authorization})
     assert response.status_code == 401
 
 
@@ -62,8 +57,7 @@ def test_b05_expired_token_rejected(clients, services, monkeypatch):
     token = issue_token(clients.auth)
     monkeypatch.setattr(services.auth, "_now", lambda: 10000.0)
     authorization = f"Bearer {token}"
-    response = clients.auth.get("/whoami", headers={"Authorization": authorization},
-                                params={"authorization": authorization})
+    response = clients.auth.get("/whoami", headers={"Authorization": authorization})
     assert response.status_code == 401
 
 
