@@ -1,0 +1,132 @@
+[
+  {
+    "id": "B01",
+    "branch": "fix/b01-post-login-body",
+    "commit": "082e3dc511b1e58746390de74518068ecea2bc24",
+    "result": "2 passed, 54 deselected, 2 warnings in 0.15s",
+    "base": "main",
+    "title": "B01: Перенести login у POST із JSON",
+    "body_file": "docs/prs/B01.md",
+    "patch_file": "patches/B01.patch"
+  },
+  {
+    "id": "B02",
+    "branch": "fix/b02-login-unauthorized",
+    "commit": "49a581e33448c4cd094f62f745a10f542a5a891e",
+    "result": "1 passed, 55 deselected, 2 warnings in 0.16s",
+    "base": "fix/b01-post-login-body",
+    "title": "B02: Повертати 401 для неправильних облікових даних",
+    "body_file": "docs/prs/B02.md",
+    "patch_file": "patches/B02.patch"
+  },
+  {
+    "id": "B03",
+    "branch": "fix/b03-authorization-header",
+    "commit": "19f5bafd2e6f20e4f0a48fc74b5adedea7c3b50e",
+    "result": "2 passed",
+    "base": "fix/b02-login-unauthorized",
+    "title": "B03: Читати Authorization із заголовка",
+    "body_file": "docs/prs/B03.md",
+    "patch_file": "patches/B03.patch"
+  },
+  {
+    "id": "B04",
+    "branch": "fix/b04-whoami-unauthorized",
+    "commit": "f67d27234d73c7f31e0114ad0a593642a9ca4ca3",
+    "result": "2 passed, 54 deselected, 2 warnings in 0.16s",
+    "base": "fix/b03-authorization-header",
+    "title": "B04: Повертати 401 при відсутній авторизації",
+    "body_file": "docs/prs/B04.md",
+    "patch_file": "patches/B04.patch"
+  },
+  {
+    "id": "B05",
+    "branch": "fix/b05-validate-issued-bearer-tokens",
+    "commit": "e35c5d8d543826463030f10699a0d82ed97bee14",
+    "result": "7 passed, 49 deselected, 2 warnings in 0.29s",
+    "base": "fix/b04-whoami-unauthorized",
+    "title": "B05: Перевіряти видані Bearer-токени та строк дії",
+    "body_file": "docs/prs/B05.md",
+    "patch_file": "patches/B05.patch"
+  },
+  {
+    "id": "B06",
+    "branch": "fix/b06-product-not-found",
+    "commit": "bfef2d718b04d0d4c062a351aedd02ef5180ba51",
+    "result": "1 passed, 55 deselected, 2 warnings in 0.15s",
+    "base": "fix/b05-validate-issued-bearer-tokens",
+    "title": "B06: Повертати 404 для відсутнього товару",
+    "body_file": "docs/prs/B06.md",
+    "patch_file": "patches/B06.patch"
+  },
+  {
+    "id": "B07",
+    "branch": "fix/b07-product-contract",
+    "commit": "e7840e25d5ec12554abce0fb546ac8b240570d40",
+    "result": "3 passed, 53 deselected, 2 warnings in 0.21s",
+    "base": "fix/b06-product-not-found",
+    "title": "B07: Зафіксувати контракт Product",
+    "body_file": "docs/prs/B07.md",
+    "patch_file": "patches/B07.patch"
+  },
+  {
+    "id": "B08",
+    "branch": "fix/b08-enforce-order-authentication",
+    "commit": "1736b595d4b3c480b07f2addefdad6d413829bcb",
+    "result": "3 passed, 53 deselected, 2 warnings in 0.20s",
+    "base": "fix/b07-product-contract",
+    "title": "B08: Заборонити створення замовлення після відмови Auth",
+    "body_file": "docs/prs/B08.md",
+    "patch_file": "patches/B08.patch"
+  },
+  {
+    "id": "B09",
+    "branch": "fix/b09-validate-order-input",
+    "commit": "bd3e94ef0f1f0d9ea0a769f1974a3c8bc726e245",
+    "result": "12 passed, 44 deselected, 2 warnings in 0.48s",
+    "base": "fix/b08-enforce-order-authentication",
+    "title": "B09: Валідувати вхідне замовлення",
+    "body_file": "docs/prs/B09.md",
+    "patch_file": "patches/B09.patch"
+  },
+  {
+    "id": "B10",
+    "branch": "fix/b10-require-existing-product",
+    "commit": "54ae37ba94c59dfce6a93634575d575eddf2f50a",
+    "result": "1 passed, 55 deselected, 2 warnings in 0.22s",
+    "base": "fix/b09-validate-order-input",
+    "title": "B10: Перевіряти існування замовленого товару",
+    "body_file": "docs/prs/B10.md",
+    "patch_file": "patches/B10.patch"
+  },
+  {
+    "id": "B11",
+    "branch": "fix/b11-check-available-stock",
+    "commit": "64f77a0648468bcfcd69eeeb8f5b7fe3df4a02e9",
+    "result": "3 passed, 53 deselected, 2 warnings in 0.28s",
+    "base": "fix/b10-require-existing-product",
+    "title": "B11: Перевіряти доступний залишок",
+    "body_file": "docs/prs/B11.md",
+    "patch_file": "patches/B11.patch"
+  },
+  {
+    "id": "B12",
+    "branch": "fix/b12-handle-upstream-failures",
+    "commit": "f46912a525b4fb886c59c526e294e3b172b21e16",
+    "result": "12 passed, 44 deselected, 2 warnings in 0.52s",
+    "base": "fix/b11-check-available-stock",
+    "title": "B12: Обробляти збої та контракти залежностей",
+    "body_file": "docs/prs/B12.md",
+    "patch_file": "patches/B12.patch"
+  },
+  {
+    "id": "B13",
+    "branch": "fix/b13-isolate-user-orders",
+    "commit": "bd5e3c0f5ebf069b5c9f446f7a1403f33f9d0aaf",
+    "result": "3 passed, 53 deselected, 2 warnings in 0.21s",
+    "base": "fix/b12-handle-upstream-failures",
+    "title": "B13: Обмежити список замовлень їхнім власником",
+    "body_file": "docs/prs/B13.md",
+    "patch_file": "patches/B13.patch"
+  }
+]

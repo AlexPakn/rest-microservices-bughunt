@@ -1,4 +1,5 @@
 import importlib.util
+import os
 import sys
 from contextlib import ExitStack
 from pathlib import Path
@@ -8,7 +9,7 @@ import httpx
 import pytest
 from fastapi.testclient import TestClient
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(os.environ.get("BUGHUNT_SOURCE_ROOT", Path(__file__).resolve().parents[1]))
 
 
 @pytest.fixture
