@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Response
+from pydantic import BaseModel, ConfigDict, Field
 from fastapi.responses import JSONResponse
 
 app = FastAPI(title="AuthService")
@@ -8,8 +9,15 @@ USERS = {
 }
 
 
-@app.get("/login")
-async def login(email: str, password: str, response: Response):
+class LoginRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    email: str = Field(min_length=1)
+    password: str = Field(min_length=1)
+
+
+@app.post("/login")
+async def login(payload: LoginRequest):
+    email, password = payload.email, payload.password
     user = USERS.get(email)
     if not user or user["password"] != password:
         return JSONResponse({"message": "invalid credentials"}, status_code=200)
